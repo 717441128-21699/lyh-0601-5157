@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, Text, Button, PullToRefresh } from '@tarojs/components';
+import { View, Text, Button, PullToRefresh, Canvas } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
 import dayjs from 'dayjs';
 import styles from './index.module.scss';
@@ -66,7 +66,8 @@ const ReportPage: React.FC = () => {
     setIsExporting(true);
     try {
       Taro.showLoading({ title: '正在生成...', mask: true });
-      await generateReportPDF(monthlyReport);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await generateReportPDF(monthlyReport, 'reportCanvas');
       Taro.showToast({ title: '已保存到相册', icon: 'success' });
     } catch (error) {
       Taro.showToast({ title: '导出失败', icon: 'none' });
@@ -300,6 +301,12 @@ const ReportPage: React.FC = () => {
           </View>
         )}
       </PullToRefresh>
+      
+      <Canvas
+        id="reportCanvas"
+        type="2d"
+        style={{ position: 'fixed', left: '-9999px', top: '-9999px', width: '600px', height: '900px' }}
+      />
     </View>
   );
 };

@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro';
 import { Contract, MonthlyReport } from '../types/contract';
 import dayjs from 'dayjs';
 

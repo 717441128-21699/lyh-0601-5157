@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, ScrollView } from '@tarojs/components';
+import { View, Text, Button, ScrollView, Canvas } from '@tarojs/components';
 import Taro, { useRouter, useDidShow } from '@tarojs/taro';
 import classnames from 'classnames';
 import dayjs from 'dayjs';
@@ -22,7 +22,9 @@ const ContractDetailPage: React.FC = () => {
     setCurrentContract,
     deleteContract,
     updateContract,
-    checkAndSendReminders
+    checkAndSendReminders,
+    handleContractRenewal,
+    handleContractTermination
   } = useContractStore();
 
   const [activeTab, setActiveTab] = useState<TabType>('info');
@@ -69,7 +71,7 @@ const ContractDetailPage: React.FC = () => {
     setIsExporting(true);
     try {
       Taro.showLoading({ title: '正在生成...', mask: true });
-      await generateContractPDF(currentContract, currentContract.signRecords);
+      await generateContractPDF(currentContract, 'contractCanvas');
       Taro.showToast({ title: '已保存到相册', icon: 'success' });
     } catch (error) {
       Taro.showToast({ title: '导出失败', icon: 'none' });
@@ -107,9 +109,28 @@ const ContractDetailPage: React.FC = () => {
     Taro.showModal({
       title: '续签合同',
       content: '将基于当前合同创建一份新的续签合同，是否继续？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          Taro.showToast({ title: '功能开发中', icon: 'none' });
+          try {
+            Taro.showLoading({ title: '处理中...', mask: true });
+            const success = await handleContractRenewal(contractId);
+            if (success) {
+              Taro.showToast({ title: '续签成功', icon: 'success' });
+              setTimeout(() => {
+                const updated = getContractById(contractId);
+                if (updated) {
+                  setCurrentContract(updated);
+                }
+              }, 500);
+            } else {
+              Taro.showToast({ title: '续签失败', icon: 'none' });
+            }
+          } catch (error) {
+            console.error('Renewal error:', error);
+            Taro.showToast({ title: '续签失败', icon: 'none' });
+          } finally {
+            Taro.hideLoading();
+          }
         }
       }
     });
@@ -120,17 +141,25 @@ const ContractDetailPage: React.FC = () => {
       title: '终止合同',
       content: '确定要提前终止这份合同吗？此操作将更新合同状态。',
       confirmColor: '#dc2626',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           try {
-            updateContract(contractId, { status: 'terminated' });
-            const updated = getContractById(contractId);
-            if (updated) {
-              setCurrentContract(updated);
+            Taro.showLoading({ title: '处理中...', mask: true });
+            const success = await handleContractTermination(contractId);
+            if (success) {
+              const updated = getContractById(contractId);
+              if (updated) {
+                setCurrentContract(updated);
+              }
+              Taro.showToast({ title: '已终止', icon: 'success' });
+            } else {
+              Taro.showToast({ title: '操作失败', icon: 'none' });
             }
-            Taro.showToast({ title: '已终止', icon: 'success' });
           } catch (error) {
+            console.error('Termination error:', error);
             Taro.showToast({ title: '操作失败', icon: 'none' });
+          } finally {
+            Taro.hideLoading();
           }
         }
       }
@@ -493,6 +522,12 @@ const ContractDetailPage: React.FC = () => {
           </Button>
         )}
       </View>
+      
+      <Canvas
+        id="contractCanvas"
+        type="2d"
+        style={{ position: 'fixed', left: '-9999px', top: '-9999px', width: '600px', height: '900px' }}
+      />
     </View>
   );
 };

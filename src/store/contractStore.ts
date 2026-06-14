@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Contract, ContractStatus, ContractType, MonthlyReport, ReminderSettings, Party, ContractClause } from '../types/contract';
+import { Contract, ContractStatus, ContractType, MonthlyReport, ReminderSettings, Party, ContractClause, Reminder } from '../types/contract';
 import { mockContracts } from '../data/mockContracts';
 import { contractTemplates, getTemplateById } from '../data/templates';
 import { checkCompliance } from '../utils/compliance';
@@ -11,7 +11,10 @@ interface ContractState {
   contracts: Contract[];
   currentContract: Contract | null;
   draftContract: Partial<Contract> | null;
+  monthlyReport: MonthlyReport | null;
+  reminders: Reminder[];
   reminderSettings: ReminderSettings;
+  reminderEnabled: boolean;
   isLoading: boolean;
   validationErrors: ValidationError[];
   currentStep: number;
@@ -25,6 +28,7 @@ interface ContractActions {
   setFilterType: (type: ContractType | 'all') => void;
   setSearchKeyword: (keyword: string) => void;
   getFilteredContracts: () => Contract[];
+  createContractFromTemplate: (templateId: string) => string;
   createDraftContract: (templateId: string) => void;
   updateDraftContract: (data: Partial<Contract>) => void;
   validateDraft: () => ValidationError[];
@@ -39,6 +43,12 @@ interface ContractActions {
   addNegotiation: (contractId: string, content: string, changes: Array<{ field: string; oldValue: string; newValue: string }>) => void;
   updateReminderSettings: (settings: Partial<ReminderSettings>) => void;
   checkAndSendReminders: () => void;
+  setReminderEnabled: (enabled: boolean) => void;
+  markReminderAsRead: (reminderId: string) => void;
+  clearExpiredReminders: () => void;
+  checkReminders: () => void;
+  handleContractRenewal: (contractId: string) => Promise<boolean>;
+  handleContractTermination: (contractId: string) => Promise<boolean>;
   generateMonthlyReport: (month?: string) => MonthlyReport;
   nextStep: () => void;
   prevStep: () => void;
@@ -51,12 +61,23 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
   contracts: [],
   currentContract: null,
   draftContract: null,
+  monthlyReport: null,
+  reminders: [],
+  reminderEnabled: true,
   reminderSettings: {
     defaultDays: 30,
     urgentDays: 15,
     criticalDays: 7,
     enableNotification: true,
-    enableEmail: false
+    enableEmail: false,
+    firstReminderDays: 30,
+    secondReminderDays: 15,
+    finalReminderDays: 7,
+    notificationMethods: {
+      push: true,
+      sms: false,
+      email: false
+    }
   },
   isLoading: false,
   validationErrors: [],
@@ -83,6 +104,46 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
       }
       return true;
     });
+  },
+
+  createContractFromTemplate: (templateId) => {
+    console.log('[Store] 从模板创建合同', { templateId });
+    const template = getTemplateById(templateId);
+    if (!template) {
+      console.error('[Store] 模板不存在', { templateId });
+      Taro.showToast({ title: '模板不存在', icon: 'error' });
+      return '';
+    }
+
+    const now = dayjs();
+    const contractId = `contract_${Date.now()}`;
+    const contract: Contract = {
+      id: contractId,
+      type: template.type,
+      title: template.name,
+      templateId: template.id,
+      contractNo: `HT-${now.format('YYYYMMDD')}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
+      partyA: { name: '', idNumber: '', phone: '', address: '', email: '' },
+      partyB: { name: '', idNumber: '', phone: '', address: '', email: '' },
+      clauses: template.clauses.map(c => ({ ...c })),
+      amount: 0,
+      startDate: now.format('YYYY-MM-DD'),
+      endDate: now.add(1, 'year').format('YYYY-MM-DD'),
+      status: 'draft',
+      createdAt: now.format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: now.format('YYYY-MM-DD HH:mm:ss'),
+      risks: [],
+      signRecords: [],
+      negotiationHistory: [],
+      version: 1,
+      reminderDays: template.defaultReminderDays,
+      reminderLevel: 'normal',
+      hasReminded: false
+    };
+
+    get().addContract(contract);
+    console.log('[Store] 合同创建成功', { contractId, title: contract.title });
+    return contractId;
   },
 
   createDraftContract: (templateId) => {
@@ -165,7 +226,7 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
   },
 
   submitForCompliance: () => {
-    const { draftContract, validateDraft } = get();
+    const { draftContract, validateDraft, getContractById, updateContract, addContract } = get();
     if (!draftContract) return null;
 
     const errors = validateDraft();
@@ -174,40 +235,75 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
       return null;
     }
 
-    const contract: Contract = {
-      id: `contract_${Date.now()}`,
-      type: draftContract.type || 'other',
-      title: draftContract.title || '未命名合同',
-      templateId: draftContract.templateId || '',
-      contractNo: draftContract.contractNo || `CT-${dayjs().format('YYYYMMDDHHmmss')}`,
-      partyA: draftContract.partyA as Party,
-      partyB: draftContract.partyB as Party,
-      clauses: draftContract.clauses as ContractClause[],
-      amount: draftContract.amount || 0,
-      startDate: draftContract.startDate as string,
-      endDate: draftContract.endDate as string,
-      status: 'pending',
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      updatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      risks: [],
-      signRecords: [],
-      negotiationHistory: [],
-      version: draftContract.version || 1,
-      reminderDays: draftContract.reminderDays || 30,
-      reminderLevel: draftContract.reminderLevel || 'normal',
-      hasReminded: false
-    };
-
-    const risks = checkCompliance(contract);
-    contract.risks = risks;
+    const existingContract = draftContract.id ? getContractById(draftContract.id) : null;
+    const now = dayjs();
     
-    const hash = generateContractHash(contract);
-    contract.qrCodeData = generateQRCodeContent(contract.id, hash, contract.createdAt);
-    contract.encryptedData = encryptContract(contract);
+    let contract: Contract;
+    
+    if (existingContract) {
+      contract = {
+        ...existingContract,
+        type: draftContract.type || existingContract.type,
+        title: draftContract.title || existingContract.title,
+        partyA: draftContract.partyA as Party || existingContract.partyA,
+        partyB: draftContract.partyB as Party || existingContract.partyB,
+        clauses: draftContract.clauses as ContractClause[] || existingContract.clauses,
+        amount: draftContract.amount ?? existingContract.amount,
+        startDate: draftContract.startDate || existingContract.startDate,
+        endDate: draftContract.endDate || existingContract.endDate,
+        status: 'pending',
+        updatedAt: now.format('YYYY-MM-DD HH:mm:ss'),
+        version: existingContract.version + 1,
+        risks: [],
+        signRecords: existingContract.signRecords || [],
+        negotiationHistory: existingContract.negotiationHistory || []
+      };
+      
+      const risks = checkCompliance(contract);
+      contract.risks = risks;
+      
+      const hash = generateContractHash(contract);
+      contract.qrCodeData = generateQRCodeContent(contract.id, hash, contract.createdAt);
+      contract.encryptedData = encryptContract(contract);
+      
+      updateContract(contract.id, contract);
+    } else {
+      contract = {
+        id: draftContract.id || `contract_${Date.now()}`,
+        type: draftContract.type || 'other',
+        title: draftContract.title || '未命名合同',
+        templateId: draftContract.templateId || '',
+        contractNo: draftContract.contractNo || `HT-${now.format('YYYYMMDDHHmmss')}`,
+        partyA: draftContract.partyA as Party,
+        partyB: draftContract.partyB as Party,
+        clauses: draftContract.clauses as ContractClause[],
+        amount: draftContract.amount || 0,
+        startDate: draftContract.startDate as string,
+        endDate: draftContract.endDate as string,
+        status: 'pending',
+        createdAt: now.format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: now.format('YYYY-MM-DD HH:mm:ss'),
+        risks: [],
+        signRecords: [],
+        negotiationHistory: [],
+        version: draftContract.version || 1,
+        reminderDays: draftContract.reminderDays || 30,
+        reminderLevel: draftContract.reminderLevel || 'normal',
+        hasReminded: false
+      };
 
-    get().addContract(contract);
+      const risks = checkCompliance(contract);
+      contract.risks = risks;
+      
+      const hash = generateContractHash(contract);
+      contract.qrCodeData = generateQRCodeContent(contract.id, hash, contract.createdAt);
+      contract.encryptedData = encryptContract(contract);
+
+      addContract(contract);
+    }
+
     set({ currentContract: contract, draftContract: null });
-    console.log('[Store] 合同已提交合规检查', { contractId: contract.id, riskCount: risks.length });
+    console.log('[Store] 合同已提交合规检查', { contractId: contract.id, riskCount: contract.risks.length, isUpdate: !!existingContract });
     
     return contract;
   },
@@ -300,43 +396,174 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
   },
 
   checkAndSendReminders: () => {
-    const { contracts, reminderSettings } = get();
+    const { contracts, reminderSettings, reminderEnabled } = get();
+    if (!reminderEnabled) return;
+    
     const now = dayjs();
+    const newReminders: Reminder[] = [];
     let notifiedCount = 0;
 
     contracts.forEach(contract => {
-      if (contract.status !== 'signed' || contract.hasReminded) return;
+      if (contract.status !== 'signed') return;
 
       const endDate = dayjs(contract.endDate);
       const daysToExpiry = endDate.diff(now, 'day');
+      let newLevel = contract.reminderLevel;
+      let shouldNotify = false;
+      let reminderType: 'expiry' | 'renewal' | 'termination' = 'expiry';
+      let message = '';
 
-      if (daysToExpiry <= reminderSettings.criticalDays && contract.reminderLevel !== 'critical') {
-        get().updateContract(contract.id, { reminderLevel: 'critical' });
-        Taro.showModal({
-          title: '⚠️ 紧急提醒',
-          content: `合同"${contract.title}"将在${daysToExpiry}天后到期，请及时处理！`,
-          showCancel: false
-        });
+      if (daysToExpiry < 0) {
+        newLevel = 'critical';
+        shouldNotify = true;
+        message = `合同已逾期${Math.abs(daysToExpiry)}天，请立即处理！`;
+      } else if (daysToExpiry <= reminderSettings.finalReminderDays && contract.reminderLevel !== 'critical') {
+        newLevel = 'critical';
+        shouldNotify = true;
+        message = `合同将在${daysToExpiry}天后到期，请注意处理！`;
+      } else if (daysToExpiry <= reminderSettings.secondReminderDays && contract.reminderLevel === 'normal') {
+        newLevel = 'urgent';
+        shouldNotify = true;
+        message = `合同将在${daysToExpiry}天后到期，建议开始准备续签或终止。`;
+      } else if (daysToExpiry <= reminderSettings.firstReminderDays && !contract.hasReminded) {
+        shouldNotify = true;
+        message = `合同将在${daysToExpiry}天后到期，请注意查看。`;
+      }
+
+      if (shouldNotify) {
+        if (newLevel !== contract.reminderLevel) {
+          get().updateContract(contract.id, { reminderLevel: newLevel, hasReminded: true });
+        }
+
+        const reminder: Reminder = {
+          id: `reminder_${Date.now()}_${contract.id}`,
+          contractId: contract.id,
+          contractTitle: contract.title,
+          type: reminderType,
+          level: newLevel,
+          title: `合同到期提醒：${contract.title}`,
+          message,
+          reminderDate: now.format('YYYY-MM-DD HH:mm:ss'),
+          read: false,
+          daysUntilExpiry: daysToExpiry
+        };
+        newReminders.push(reminder);
         notifiedCount++;
-      } else if (daysToExpiry <= reminderSettings.urgentDays && contract.reminderLevel === 'normal') {
-        get().updateContract(contract.id, { reminderLevel: 'urgent' });
-        Taro.showToast({
-          title: `合同"${contract.title}"即将到期`,
-          icon: 'none',
-          duration: 3000
-        });
-        notifiedCount++;
-      } else if (daysToExpiry <= reminderSettings.defaultDays) {
-        Taro.showToast({
-          title: `合同"${contract.title}"将于${daysToExpiry}天后到期`,
-          icon: 'none',
-          duration: 2000
-        });
-        notifiedCount++;
+
+        if (daysToExpiry < 0) {
+          Taro.showModal({
+            title: '⚠️ 合同已逾期',
+            content: `合同"${contract.title}"已逾期${Math.abs(daysToExpiry)}天，请立即处理！`,
+            showCancel: false
+          });
+        } else if (newLevel === 'critical') {
+          Taro.showModal({
+            title: '⚠️ 紧急提醒',
+            content: `合同"${contract.title}"将在${daysToExpiry}天后到期，请及时处理！`,
+            showCancel: false
+          });
+        } else {
+          Taro.showToast({
+            title: `合同"${contract.title}"即将到期`,
+            icon: 'none',
+            duration: 3000
+          });
+        }
       }
     });
 
-    console.log('[Store] 提醒检查完成', { notifiedCount });
+    if (newReminders.length > 0) {
+      set(state => ({
+        reminders: [...newReminders, ...state.reminders]
+      }));
+    }
+
+    console.log('[Store] 提醒检查完成', { notifiedCount, newReminders: newReminders.length });
+  },
+
+  setReminderEnabled: (enabled) => {
+    set({ reminderEnabled: enabled });
+    console.log('[Store] 提醒开关已更新', { enabled });
+    if (enabled) {
+      get().checkAndSendReminders();
+    }
+  },
+
+  markReminderAsRead: (reminderId) => {
+    set(state => ({
+      reminders: state.reminders.map(r =>
+        r.id === reminderId ? { ...r, read: true } : r
+      )
+    }));
+    console.log('[Store] 提醒已标记为已读', { reminderId });
+  },
+
+  clearExpiredReminders: () => {
+    set(state => ({
+      reminders: state.reminders.filter(r => !r.read)
+    }));
+    console.log('[Store] 已清除已读提醒');
+  },
+
+  checkReminders: () => {
+    get().checkAndSendReminders();
+  },
+
+  handleContractRenewal: async (contractId) => {
+    const contract = get().getContractById(contractId);
+    if (!contract) {
+      console.error('[Store] 合同不存在', { contractId });
+      return false;
+    }
+
+    try {
+      const newContract: Contract = {
+        ...contract,
+        id: `contract_${Date.now()}`,
+        contractNo: `HT-${dayjs().format('YYYYMMDDHHmmss')}`,
+        startDate: dayjs(contract.endDate).add(1, 'day').format('YYYY-MM-DD'),
+        endDate: dayjs(contract.endDate).add(1, 'year').format('YYYY-MM-DD'),
+        status: 'draft',
+        createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        risks: [],
+        signRecords: [],
+        negotiationHistory: [],
+        version: 1,
+        reminderLevel: 'normal',
+        hasReminded: false
+      };
+
+      get().addContract(newContract);
+      get().updateContract(contractId, { status: 'expired' });
+      
+      console.log('[Store] 合同续签成功', { oldContractId: contractId, newContractId: newContract.id });
+      return true;
+    } catch (error) {
+      console.error('[Store] 合同续签失败', error);
+      return false;
+    }
+  },
+
+  handleContractTermination: async (contractId) => {
+    const contract = get().getContractById(contractId);
+    if (!contract) {
+      console.error('[Store] 合同不存在', { contractId });
+      return false;
+    }
+
+    try {
+      get().updateContract(contractId, { 
+        status: 'terminated',
+        endDate: dayjs().format('YYYY-MM-DD')
+      });
+      
+      console.log('[Store] 合同终止成功', { contractId });
+      return true;
+    } catch (error) {
+      console.error('[Store] 合同终止失败', error);
+      return false;
+    }
   },
 
   generateMonthlyReport: (month) => {
@@ -344,6 +571,9 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
     const targetMonth = month || dayjs().format('YYYY-MM');
     const monthStart = dayjs(targetMonth + '-01');
     const monthEnd = monthStart.endOf('month');
+    const now = dayjs();
+
+    console.log('[Store] 生成月度报告', { targetMonth, contractCount: contracts.length });
 
     const monthContracts = contracts.filter(c => {
       const createdAt = dayjs(c.createdAt);
@@ -353,14 +583,46 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
     const typeDistribution = { lease: 0, loan: 0, labor: 0, other: 0 } as Record<ContractType, number>;
     const statusDistribution = { draft: 0, pending: 0, negotiating: 0, signed: 0, expired: 0, terminated: 0 } as Record<ContractStatus, number>;
 
-    monthContracts.forEach(c => {
+    contracts.forEach(c => {
       typeDistribution[c.type]++;
       statusDistribution[c.status]++;
     });
 
-    const totalAmount = monthContracts.reduce((sum, c) => sum + c.amount, 0);
+    const totalAmount = contracts.reduce((sum, c) => sum + c.amount, 0);
+    const newThisMonth = monthContracts.length;
 
-    const now = dayjs();
+    const thisMonthStart = dayjs().startOf('month');
+    const thisMonthEnd = dayjs().endOf('month');
+    const nextMonthStart = thisMonthEnd.add(1, 'day').startOf('month');
+    const nextMonthEnd = nextMonthStart.endOf('month');
+    const in2MonthsStart = nextMonthEnd.add(1, 'day').startOf('month');
+    const in2MonthsEnd = in2MonthsStart.endOf('month');
+
+    const expiringThisMonth = contracts.filter(c => {
+      const endDate = dayjs(c.endDate);
+      return c.status === 'signed' && 
+        endDate.isAfter(thisMonthStart.subtract(1, 'day')) && 
+        endDate.isBefore(thisMonthEnd.add(1, 'day'));
+    }).length;
+
+    const expiringNextMonth = contracts.filter(c => {
+      const endDate = dayjs(c.endDate);
+      return c.status === 'signed' && 
+        endDate.isAfter(nextMonthStart.subtract(1, 'day')) && 
+        endDate.isBefore(nextMonthEnd.add(1, 'day'));
+    }).length;
+
+    const expiringIn2Months = contracts.filter(c => {
+      const endDate = dayjs(c.endDate);
+      return c.status === 'signed' && 
+        endDate.isAfter(in2MonthsStart.subtract(1, 'day')) && 
+        endDate.isBefore(in2MonthsEnd.add(1, 'day'));
+    }).length;
+
+    const expiringIn3PlusMonths = contracts.filter(c => 
+      c.status === 'signed' && dayjs(c.endDate).isAfter(in2MonthsEnd)
+    ).length;
+
     const expiring30 = contracts.filter(c => c.status === 'signed' && dayjs(c.endDate).diff(now, 'day') <= 30 && dayjs(c.endDate).diff(now, 'day') > 15);
     const expiring15 = contracts.filter(c => c.status === 'signed' && dayjs(c.endDate).diff(now, 'day') <= 15 && dayjs(c.endDate).diff(now, 'day') > 7);
     const expiring7 = contracts.filter(c => c.status === 'signed' && dayjs(c.endDate).diff(now, 'day') <= 7 && dayjs(c.endDate).diff(now, 'day') >= 0);
@@ -369,8 +631,14 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
 
     const report: MonthlyReport = {
       month: targetMonth,
-      totalCount: monthContracts.length,
+      totalCount: contracts.length,
+      totalContracts: contracts.length,
       totalAmount,
+      newThisMonth,
+      expiringThisMonth,
+      expiringNextMonth,
+      expiringIn2Months,
+      expiringIn3PlusMonths,
       typeDistribution,
       statusDistribution,
       expiryDistribution: [
@@ -382,7 +650,13 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
       upcomingExpiry
     };
 
-    console.log('[Store] 月度报告已生成', { month: targetMonth, totalCount: report.totalCount });
+    set({ monthlyReport: report });
+    console.log('[Store] 月度报告已生成', { 
+      month: targetMonth, 
+      totalContracts: report.totalContracts,
+      totalAmount: report.totalAmount,
+      expiringThisMonth: report.expiringThisMonth
+    });
     return report;
   },
 
@@ -394,6 +668,7 @@ export const useContractStore = create<ContractState & ContractActions>((set, ge
   initStore: () => {
     console.log('[Store] 初始化数据');
     set({ contracts: [...mockContracts] });
+    get().generateMonthlyReport();
     setTimeout(() => {
       get().checkAndSendReminders();
     }, 2000);

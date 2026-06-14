@@ -9,6 +9,31 @@
       background-color: rgba(220, 38, 38, 0.03);
     }
   }
+  
+  &.disabled {
+    opacity: 0.7;
+    
+    .picker, .input, .textarea {
+      background-color: $color-bg-hover;
+    }
+  }
+}
+
+.picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80rpx;
+  
+  .pickerArrow {
+    font-size: 36rpx;
+    color: $color-text-tertiary;
+    transform: rotate(90deg);
+  }
+}
+
+.inputText {
+  color: $color-text-primary;
 }
 
 .labelRow {

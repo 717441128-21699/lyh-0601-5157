@@ -101,7 +101,13 @@ export interface ValidationError {
 export interface MonthlyReport {
   month: string;
   totalCount: number;
+  totalContracts: number;
   totalAmount: number;
+  newThisMonth: number;
+  expiringThisMonth: number;
+  expiringNextMonth: number;
+  expiringIn2Months: number;
+  expiringIn3PlusMonths: number;
   typeDistribution: Record<ContractType, number>;
   statusDistribution: Record<ContractStatus, number>;
   expiryDistribution: Array<{
@@ -117,4 +123,25 @@ export interface ReminderSettings {
   criticalDays: number;
   enableNotification: boolean;
   enableEmail: boolean;
+  firstReminderDays: number;
+  secondReminderDays: number;
+  finalReminderDays: number;
+  notificationMethods: {
+    push: boolean;
+    sms: boolean;
+    email: boolean;
+  };
+}
+
+export interface Reminder {
+  id: string;
+  contractId: string;
+  contractTitle: string;
+  type: 'expiry' | 'renewal' | 'termination';
+  level: ReminderLevel;
+  title: string;
+  message: string;
+  reminderDate: string;
+  read: boolean;
+  daysUntilExpiry: number;
 }
