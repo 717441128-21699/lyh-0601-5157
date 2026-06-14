@@ -1,0 +1,352 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.pageHeader {
+  background: $gradient-header;
+  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.headerTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.settingsSection {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  margin-top: -40rpx;
+  position: relative;
+  z-index: 10;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+}
+
+.sectionIcon {
+  margin-right: $spacing-sm;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-lg 0;
+  border-bottom: 1rpx solid $color-divider;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.settingInfo {
+  flex: 1;
+  margin-right: $spacing-lg;
+}
+
+.settingLabel {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.settingDesc {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.daysInput {
+  width: 120rpx;
+  height: $button-height-md;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  text-align: center;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
+}
+
+.daysUnit {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.daysSelector {
+  display: flex;
+  align-items: center;
+}
+
+.reminderListSection {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.reminderTabs {
+  display: flex;
+  margin-bottom: $spacing-lg;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  padding: $spacing-xs;
+}
+
+.reminderTab {
+  flex: 1;
+  padding: $spacing-sm;
+  text-align: center;
+  border-radius: $radius-button;
+  
+  &.active {
+    background: $gradient-primary;
+    
+    .reminderTabText {
+      color: $color-text-white;
+    }
+  }
+}
+
+.reminderTabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.reminderList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.reminderItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md;
+  background-color: $color-bg-hover;
+  border-radius: $radius-sm;
+  border-left: 6rpx solid $color-primary;
+  
+  &.urgent {
+    border-left-color: $color-warning;
+    background-color: rgba(217, 119, 6, 0.05);
+  }
+  
+  &.critical {
+    border-left-color: $color-error;
+    background-color: rgba(220, 38, 38, 0.05);
+  }
+  
+  &.read {
+    opacity: 0.7;
+  }
+}
+
+.reminderIcon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background-color: rgba(30, 58, 138, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+  font-size: 28rpx;
+  
+  .urgent & {
+    background-color: rgba(217, 119, 6, 0.1);
+  }
+  
+  .critical & {
+    background-color: rgba(220, 38, 38, 0.1);
+  }
+}
+
+.reminderContent {
+  flex: 1;
+}
+
+.reminderTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.reminderDesc {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: 1.5;
+  margin-bottom: $spacing-xs;
+}
+
+.reminderTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.reminderActions {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.actionBtn {
+  @include button-reset;
+  height: $button-height-sm;
+  padding: 0 $spacing-md;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.primaryAction {
+  background: $gradient-primary;
+  color: $color-text-white;
+}
+
+.secondaryAction {
+  background-color: $color-bg-hover;
+  color: $color-text-secondary;
+}
+
+.dangerAction {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: $color-error;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xl * 2 $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 100rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.notificationMethods {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.methodTag {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-button;
+  background-color: $color-bg-hover;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  
+  &.active {
+    background-color: rgba(30, 58, 138, 0.1);
+    color: $color-primary;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+}
+
+.actionButton {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-md;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.clearBtn {
+  background-color: $color-bg-hover;
+  color: $color-text-secondary;
+}
+
+.testBtn {
+  background: $gradient-primary;
+  color: $color-text-white;
+}
+
+.levelExplanation {
+  background-color: $color-bg-hover;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  margin: $spacing-md $spacing-lg;
+}
+
+.explanationTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.explanationItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-xs 0;
+}
+
+.levelDot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  margin-right: $spacing-sm;
+  
+  &.normal { background-color: $color-primary; }
+  &.urgent { background-color: $color-warning; }
+  &.critical { background-color: $color-error; }
+}
+
+.explanationText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  flex: 1;
+}
+
+.explanationDays {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+$spacing-xxl: 64rpx;

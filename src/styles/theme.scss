@@ -1,0 +1,50 @@
+// ============================================
+// 主题配色变量（法律文书合同管理APP）
+// ============================================
+
+// 品牌主题色：深蓝色系，专业可信赖
+$color-primary: #1e3a8a;
+$color-primary-light: #3b82f6;
+$color-primary-dark: #1e40af;
+
+// 功能色
+$color-success: #059669;
+$color-warning: #d97706;
+$color-error: #dc2626;
+$color-info: #2563eb;
+$color-accent: #d97706;
+
+// 背景色
+$color-bg-page: #f8fafc;
+$color-bg-card: #ffffff;
+$color-bg-hover: #f1f5f9;
+
+// 文本色
+$color-text-primary: #0f172a;
+$color-text-secondary: #475569;
+$color-text-tertiary: #94a3b8;
+$color-text-disabled: #cbd5e1;
+$color-text-white: #ffffff;
+
+// 边框色
+$color-border: #e2e8f0;
+$color-divider: #f1f5f9;
+
+// 标签背景色
+$color-tag-signed-bg: #d1fae5;
+$color-tag-signed-text: #065f46;
+$color-tag-pending-bg: #fef3c7;
+$color-tag-pending-text: #92400e;
+$color-tag-expired-bg: #fee2e2;
+$color-tag-expired-text: #991b1b;
+$color-tag-negotiating-bg: #dbeafe;
+$color-tag-negotiating-text: #1e40af;
+
+// 风险等级色
+$color-risk-high: #dc2626;
+$color-risk-medium: #d97706;
+$color-risk-low: #059669;
+
+// 渐变
+$gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+$gradient-header: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);

@@ -1,0 +1,299 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.pageHeader {
+  background: $gradient-header;
+  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.headerTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contractInfo {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  margin-top: -40rpx;
+  position: relative;
+  z-index: 10;
+  box-shadow: $shadow-card;
+}
+
+.infoRow {
+  display: flex;
+  padding: $spacing-sm 0;
+  border-bottom: 1rpx solid $color-divider;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.infoLabel {
+  width: 140rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.signSection {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+}
+
+.sectionIcon {
+  margin-right: $spacing-sm;
+}
+
+.signArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-lg 0;
+}
+
+.signPadContainer {
+  width: 100%;
+  height: 300rpx;
+  background-color: $color-text-white;
+  border: 2rpx dashed $color-divider;
+  border-radius: $radius-sm;
+  position: relative;
+  overflow: hidden;
+  
+  &.active {
+    border-color: $color-primary;
+    border-style: solid;
+  }
+}
+
+.signPad {
+  width: 100%;
+  height: 100%;
+}
+
+.signPlaceholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.placeholderIcon {
+  font-size: 60rpx;
+  opacity: 0.3;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.placeholderText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.signActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  width: 100%;
+}
+
+.clearBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-md;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.confirmBtn {
+  @include button-reset;
+  flex: 2;
+  height: $button-height-md;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.signParties {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.signParty {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  border: 2rpx solid $color-divider;
+  background-color: $color-bg-hover;
+  
+  &.signed {
+    border-color: $color-success;
+    background-color: rgba(5, 150, 105, 0.05);
+  }
+  
+  &.active {
+    border-color: $color-primary;
+    background-color: rgba(30, 58, 138, 0.05);
+  }
+}
+
+.partyLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.partyName {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.partyStatus {
+  font-size: $font-size-xs;
+  
+  &.signed {
+    color: $color-success;
+  }
+  
+  &.pending {
+    color: $color-warning;
+  }
+}
+
+.tipSection {
+  background-color: rgba(59, 130, 246, 0.08);
+  border-left: 6rpx solid $color-primary;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  margin: $spacing-md $spacing-lg;
+}
+
+.tipTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-sm;
+  display: flex;
+  align-items: center;
+}
+
+.tipIcon {
+  margin-right: $spacing-sm;
+}
+
+.tipText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: $spacing-md;
+  z-index: 100;
+}
+
+.secondaryBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  color: $color-text-secondary;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.primaryBtn {
+  @include button-reset;
+  flex: 2;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+$spacing-xxl: 64rpx;

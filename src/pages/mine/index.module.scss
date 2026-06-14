@@ -1,0 +1,225 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.userHeader {
+  background: $gradient-header;
+  padding: $spacing-xxl $spacing-lg $spacing-xxl * 1.5;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-lg;
+  border: 3rpx solid rgba(255, 255, 255, 0.4);
+}
+
+.avatarIcon {
+  font-size: 60rpx;
+}
+
+.userText {
+  flex: 1;
+}
+
+.userName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.userId {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.userStats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.15);
+}
+
+.userStat {
+  text-align: center;
+}
+
+.userStatValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  display: block;
+}
+
+.userStatLabel {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: $spacing-xs;
+  display: block;
+}
+
+.section {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  padding: $spacing-md $spacing-lg $spacing-sm;
+}
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  border-top: 1rpx solid $color-divider;
+  
+  &:first-child {
+    border-top: none;
+  }
+  
+  &:active {
+    background-color: $color-bg-hover;
+  }
+}
+
+.menuIcon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: $radius-button;
+  background-color: rgba(30, 58, 138, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  font-size: 28rpx;
+}
+
+.menuIconBlue {
+  background-color: rgba(59, 130, 246, 0.12);
+}
+
+.menuIconGreen {
+  background-color: rgba(5, 150, 105, 0.12);
+}
+
+.menuIconOrange {
+  background-color: rgba(217, 119, 6, 0.12);
+}
+
+.menuIconPurple {
+  background-color: rgba(139, 92, 246, 0.12);
+}
+
+.menuIconRed {
+  background-color: rgba(220, 38, 38, 0.12);
+}
+
+.menuContent {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menuText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.menuSubtitle {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
+.menuArrow {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.menuBadge {
+  background-color: $color-error;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  padding: 2rpx 12rpx;
+  border-radius: 20rpx;
+  margin-right: $spacing-sm;
+}
+
+.settingsGroup {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.versionInfo {
+  text-align: center;
+  padding: $spacing-xl $spacing-lg;
+  color: $color-text-tertiary;
+  font-size: $font-size-xs;
+}
+
+.reminderToggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggleSwitch {
+  width: 80rpx;
+  height: 44rpx;
+  border-radius: 22rpx;
+  background-color: $color-bg-hover;
+  position: relative;
+  transition: background-color 0.3s;
+  
+  &.active {
+    background-color: $color-primary;
+  }
+}
+
+.toggleKnob {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background-color: $color-text-white;
+  position: absolute;
+  top: 4rpx;
+  left: 4rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  transition: left 0.3s;
+  
+  .active & {
+    left: 40rpx;
+  }
+}
+
+$spacing-xxl: 64rpx;

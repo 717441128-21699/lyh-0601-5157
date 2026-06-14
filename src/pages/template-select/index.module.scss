@@ -1,0 +1,127 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.pageHeader {
+  background-color: $color-bg-card;
+  padding: $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.headerTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.typeTabs {
+  display: flex;
+  background-color: $color-bg-card;
+  padding: $spacing-sm $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+  gap: $spacing-sm;
+}
+
+.typeTab {
+  flex: 1;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-button;
+  text-align: center;
+  background-color: $color-bg-hover;
+  
+  &.active {
+    background: $gradient-primary;
+    
+    .typeTabText {
+      color: $color-text-white;
+    }
+  }
+}
+
+.typeTabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.templateList {
+  padding: $spacing-md $spacing-lg;
+}
+
+.templateGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.customSection {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.customTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+  display: flex;
+  align-items: center;
+}
+
+.customIcon {
+  margin-right: $spacing-sm;
+}
+
+.customDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-md;
+}
+
+.customBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-md;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xxl * 2 $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+$spacing-xxl: 64rpx;

@@ -1,0 +1,88 @@
+@use '@/styles/variables.scss' as *;
+
+.statusTagContainer {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.statusTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+  
+  &.sm {
+    padding: 2rpx 12rpx;
+    .tagText {
+      font-size: $font-size-xs;
+    }
+  }
+  
+  &.md {
+    padding: 4rpx 16rpx;
+    .tagText {
+      font-size: $font-size-sm;
+    }
+  }
+  
+  &.draft {
+    background-color: #f1f5f9;
+    .tagText { color: #64748b; }
+  }
+  
+  &.pending {
+    background-color: $color-tag-pending-bg;
+    .tagText { color: $color-tag-pending-text; }
+  }
+  
+  &.negotiating {
+    background-color: $color-tag-negotiating-bg;
+    .tagText { color: $color-tag-negotiating-text; }
+  }
+  
+  &.signed {
+    background-color: $color-tag-signed-bg;
+    .tagText { color: $color-tag-signed-text; }
+  }
+  
+  &.expired {
+    background-color: $color-tag-expired-bg;
+    .tagText { color: $color-tag-expired-text; }
+  }
+  
+  &.terminated {
+    background-color: #fee2e2;
+    .tagText { color: #991b1b; }
+  }
+}
+
+.reminderTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rpx 12rpx;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+  
+  &.urgent {
+    background-color: #fef3c7;
+    .tagText { 
+      color: #92400e;
+      font-size: $font-size-xs;
+    }
+  }
+  
+  &.critical {
+    background-color: #fee2e2;
+    .tagText { 
+      color: #991b1b;
+      font-size: $font-size-xs;
+    }
+  }
+}
+
+.tagText {
+  font-weight: $font-weight-medium;
+}

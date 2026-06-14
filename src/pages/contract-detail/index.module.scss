@@ -1,0 +1,423 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.statusBanner {
+  background: $gradient-header;
+  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.statusLeft {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.statusIcon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  font-size: 40rpx;
+}
+
+.statusInfo {
+  flex: 1;
+}
+
+.statusTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.statusDesc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.shareBtn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.contractCode {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.15);
+}
+
+.tabs {
+  display: flex;
+  background-color: $color-bg-card;
+  margin: 0 $spacing-lg;
+  border-radius: $radius-button;
+  padding: $spacing-xs;
+  margin-top: -40rpx;
+  position: relative;
+  z-index: 10;
+  box-shadow: $shadow-card;
+}
+
+.tab {
+  flex: 1;
+  padding: $spacing-sm;
+  text-align: center;
+  border-radius: $radius-button;
+  
+  &.active {
+    background: $gradient-primary;
+    
+    .tabText {
+      color: $color-text-white;
+    }
+  }
+}
+
+.tabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.contentSection {
+  padding: $spacing-md $spacing-lg;
+}
+
+.infoCard {
+  background-color: $color-bg-card;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.cardTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+}
+
+.cardIcon {
+  margin-right: $spacing-sm;
+}
+
+.infoRow {
+  display: flex;
+  padding: $spacing-sm 0;
+  border-bottom: 1rpx solid $color-divider;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.infoLabel {
+  width: 160rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  word-break: break-all;
+}
+
+.partySection {
+  margin-bottom: $spacing-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.partyTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-sm;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2rpx solid $color-primary;
+  display: inline-block;
+}
+
+.termsContent {
+  background-color: $color-bg-hover;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+.termsText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.signSection {
+  display: flex;
+  justify-content: space-around;
+  padding: $spacing-lg 0;
+}
+
+.signParty {
+  text-align: center;
+}
+
+.signBox {
+  width: 200rpx;
+  height: 120rpx;
+  border: 2rpx dashed $color-divider;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-sm;
+  background-color: $color-bg-hover;
+  
+  &.signed {
+    border-style: solid;
+    border-color: $color-success;
+    background-color: rgba(5, 150, 105, 0.05);
+  }
+}
+
+.signText {
+  font-size: 32rpx;
+  font-weight: $font-weight-bold;
+  color: $color-success;
+}
+
+.signPlaceholder {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.signName {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.signDate {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: $spacing-xs;
+}
+
+.qrSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-lg 0;
+}
+
+.qrContainer {
+  background-color: $color-text-white;
+  padding: $spacing-md;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.qrDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.timeline {
+  position: relative;
+  padding-left: $spacing-lg;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15rpx;
+  top: 10rpx;
+  bottom: 10rpx;
+  width: 2rpx;
+  background-color: $color-divider;
+}
+
+.timelineItem {
+  position: relative;
+  padding-bottom: $spacing-lg;
+  
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.timelineDot {
+  position: absolute;
+  left: -$spacing-lg;
+  top: 6rpx;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background-color: $color-primary;
+  border: 4rpx solid $color-bg-card;
+  
+  &.pending {
+    background-color: $color-bg-hover;
+    border-color: $color-divider;
+  }
+  
+  &.success {
+    background-color: $color-success;
+  }
+}
+
+.timelineContent {
+  background-color: $color-bg-hover;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+}
+
+.timelineTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.timelineDesc {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.timelineTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.riskSummary {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.riskStat {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  background-color: $color-bg-hover;
+}
+
+.riskStatValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  display: block;
+  
+  &.high { color: $color-error; }
+  &.medium { color: $color-warning; }
+  &.low { color: $color-success; }
+}
+
+.riskStatLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: $spacing-xs;
+  display: block;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: $spacing-md;
+  z-index: 100;
+}
+
+.secondaryBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  color: $color-text-secondary;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.primaryBtn {
+  @include button-reset;
+  flex: 2;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.dangerBtn {
+  @include button-reset;
+  flex: 2;
+  height: $button-height-lg;
+  background-color: $color-error;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+$spacing-xxl: 64rpx;

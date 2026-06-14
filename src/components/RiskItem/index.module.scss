@@ -1,0 +1,105 @@
+@use '@/styles/variables.scss' as *;
+
+.riskItem {
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  border-left: 6rpx solid transparent;
+  
+  &.high {
+    border-left-color: $color-risk-high;
+  }
+  
+  &.medium {
+    border-left-color: $color-risk-medium;
+  }
+  
+  &.low {
+    border-left-color: $color-risk-low;
+  }
+}
+
+.riskHeader {
+  margin-bottom: $spacing-md;
+}
+
+.riskTitleRow {
+  display: flex;
+  align-items: center;
+}
+
+.riskIcon {
+  font-size: $font-size-lg;
+  margin-right: $spacing-xs;
+}
+
+.riskTitle {
+  flex: 1;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.riskLevelBadge {
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+}
+
+.riskLevelText {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.riskBody {
+  margin-bottom: $spacing-md;
+}
+
+.riskDescription {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-md;
+}
+
+.suggestionBox {
+  background-color: rgba(30, 58, 138, 0.05);
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.suggestionLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.suggestionText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.riskFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.fixButton {
+  @include button-reset;
+  height: $button-height-sm;
+  padding: 0 $spacing-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}

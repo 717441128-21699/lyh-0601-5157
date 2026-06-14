@@ -1,0 +1,314 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 180rpx;
+}
+
+.pageHeader {
+  background: $gradient-header;
+  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.headerTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contractInfo {
+  background-color: $color-bg-card;
+  margin: $spacing-md $spacing-lg;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  margin-top: -40rpx;
+  position: relative;
+  z-index: 10;
+  box-shadow: $shadow-card;
+}
+
+.infoTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.infoRow {
+  display: flex;
+  padding: $spacing-sm 0;
+}
+
+.infoLabel {
+  width: 120rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+}
+
+.messageList {
+  padding: $spacing-md $spacing-lg;
+}
+
+.messageItem {
+  display: flex;
+  margin-bottom: $spacing-lg;
+  
+  &.isMine {
+    flex-direction: row-reverse;
+  }
+}
+
+.messageAvatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background-color: $color-bg-hover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  flex-shrink: 0;
+  
+  .isMine & {
+    background-color: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+.messageContent {
+  max-width: 70%;
+  margin: 0 $spacing-md;
+}
+
+.messageBubble {
+  background-color: $color-bg-card;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  position: relative;
+  box-shadow: $shadow-card;
+  
+  .isMine & {
+    background: $gradient-primary;
+    
+    .messageText {
+      color: $color-text-white;
+    }
+    
+    .messageMeta {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+.messageText {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  line-height: 1.6;
+  margin-bottom: $spacing-sm;
+}
+
+.messageMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: flex;
+  justify-content: space-between;
+}
+
+.messageParty {
+  font-weight: $font-weight-medium;
+}
+
+.messageTime {
+  font-size: $font-size-xs;
+}
+
+.messageStatus {
+  font-size: $font-size-xs;
+  margin-left: $spacing-sm;
+}
+
+.statusPending {
+  color: $color-warning;
+}
+
+.statusAccepted {
+  color: $color-success;
+}
+
+.statusRejected {
+  color: $color-error;
+}
+
+.inputSection {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-bg-card;
+  padding: $spacing-md $spacing-lg;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.partySelector {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.partyOption {
+  flex: 1;
+  padding: $spacing-sm;
+  text-align: center;
+  border-radius: $radius-button;
+  background-color: $color-bg-hover;
+  border: 2rpx solid transparent;
+  
+  &.active {
+    border-color: $color-primary;
+    background-color: rgba(30, 58, 138, 0.08);
+    
+    .partyOptionText {
+      color: $color-primary;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+.partyOptionText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.inputRow {
+  display: flex;
+  gap: $spacing-md;
+  align-items: flex-end;
+}
+
+.textareaWrapper {
+  flex: 1;
+  background-color: $color-bg-hover;
+  border-radius: $radius-button;
+  padding: $spacing-sm $spacing-md;
+  max-height: 200rpx;
+}
+
+.messageInput {
+  width: 100%;
+  min-height: 72rpx;
+  max-height: 200rpx;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  background: transparent;
+}
+
+.sendBtn {
+  @include button-reset;
+  height: $button-height-lg;
+  padding: 0 $spacing-xl;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xxl * 2 $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  text-align: center;
+  margin-bottom: $spacing-sm;
+}
+
+.emptySubtext {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.negotiationActions {
+  display: flex;
+  gap: $spacing-md;
+  padding: 0 $spacing-lg $spacing-md;
+}
+
+.actionBtn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-md;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.acceptBtn {
+  background-color: rgba(5, 150, 105, 0.1);
+  color: $color-success;
+  border: 2rpx solid $color-success;
+}
+
+.rejectBtn {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: $color-error;
+  border: 2rpx solid $color-error;
+}
+
+.finalizeBtn {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  margin: $spacing-md $spacing-lg;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+$spacing-xxl: 64rpx;

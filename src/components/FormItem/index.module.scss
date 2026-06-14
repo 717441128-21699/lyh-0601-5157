@@ -1,0 +1,98 @@
+@use '@/styles/variables.scss' as *;
+
+.formItem {
+  margin-bottom: $spacing-lg;
+  
+  &.hasError {
+    .input, .textarea {
+      border-color: $color-error;
+      background-color: rgba(220, 38, 38, 0.03);
+    }
+  }
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.required {
+  color: $color-error;
+  margin-right: 4rpx;
+}
+
+.charCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 $spacing-md;
+  background-color: $color-bg-card;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  
+  &:focus {
+    border-color: $color-primary;
+  }
+  
+  &:disabled {
+    background-color: $color-bg-hover;
+    color: $color-text-disabled;
+  }
+}
+
+.textarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: $spacing-md;
+  background-color: $color-bg-card;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+  line-height: $line-height-normal;
+  
+  &:focus {
+    border-color: $color-primary;
+  }
+  
+  &:disabled {
+    background-color: $color-bg-hover;
+    color: $color-text-disabled;
+  }
+}
+
+.placeholder {
+  color: $color-text-disabled;
+}
+
+.errorRow {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-xs;
+}
+
+.errorIcon {
+  font-size: $font-size-sm;
+  margin-right: 4rpx;
+}
+
+.errorText {
+  font-size: $font-size-xs;
+  color: $color-error;
+}

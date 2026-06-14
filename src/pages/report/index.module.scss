@@ -1,0 +1,241 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: $spacing-xl;
+}
+
+.reportHeader {
+  background: $gradient-header;
+  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.reportTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.reportSubtitle {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: $spacing-lg;
+}
+
+.monthSelector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-button;
+  padding: $spacing-sm $spacing-md;
+}
+
+.monthText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.monthArrow {
+  font-size: $font-size-md;
+  color: $color-text-white;
+  padding: 0 $spacing-sm;
+}
+
+.exportBtn {
+  @include button-reset;
+  height: $button-height-sm;
+  padding: 0 $spacing-lg;
+  background-color: $color-text-white;
+  border-radius: $radius-button;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.summaryCards {
+  padding: 0 $spacing-lg;
+  margin-top: -40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.chartSection {
+  background-color: $color-bg-card;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  margin: $spacing-md $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+}
+
+.sectionIcon {
+  font-size: $font-size-lg;
+  margin-right: $spacing-sm;
+}
+
+.chartContainer {
+  width: 100%;
+  min-height: 300rpx;
+}
+
+.distributionList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+.distributionItem {
+  display: flex;
+  align-items: center;
+}
+
+.distributionLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  width: 160rpx;
+  flex-shrink: 0;
+}
+
+.distributionBar {
+  flex: 1;
+  height: 24rpx;
+  background-color: $color-bg-hover;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-right: $spacing-md;
+}
+
+.distributionFill {
+  height: 100%;
+  border-radius: 12rpx;
+  background: $gradient-primary;
+}
+
+.distributionValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  width: 120rpx;
+  text-align: right;
+}
+
+.typeLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.legendDot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  margin-right: $spacing-xs;
+}
+
+.trendSection {
+  background-color: $color-bg-card;
+  border-radius: $radius-card;
+  padding: $spacing-lg;
+  margin: $spacing-md $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.trendStats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 1rpx solid $color-divider;
+}
+
+.trendStat {
+  text-align: center;
+}
+
+.trendStatValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  display: block;
+}
+
+.trendStatLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-top: $spacing-xs;
+  display: block;
+}
+
+.trendStatChange {
+  font-size: $font-size-xs;
+  color: $color-success;
+  margin-top: $spacing-xs;
+  display: block;
+  
+  &.down {
+    color: $color-error;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xxl * 2 $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xxl;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+}
+
+$spacing-xxl: 64rpx;
